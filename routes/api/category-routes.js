@@ -12,19 +12,22 @@ router.get("/", async (req, res) => {
     });
     return res.json(data);
   } catch (err) {
-    return res.json(err);
+    return res.status(400).json(err);
   }
 });
 
 router.get("/:id", async (req, res) => {
   // find one category by its `id` value
   // be sure to include its associated Products
-  //add try / catch 
-  const data = await Category.findOne({
-    where: { id: req.params.id },
-    include: [Product],
-  });
-  return res.json(data);
+  try {
+    const data = await Category.findOne({
+      where: { id: req.params.id },
+      include: [Product],
+    });
+    return res.json(data);
+  } catch (err) {
+    return res.status(400).json(err);
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -33,17 +36,20 @@ router.post("/", async (req, res) => {
     const data = await Category.create(req.body);
     return res.status(200).json(data);
   } catch (err) {
-    return res.json(err);
+    return res.json(400).json(err);
   }
 });
 
 router.put("/:id", async (req, res) => {
   // update a category by its `id` value
-  //upsert - look into
-  const data = await Category.update(req.body, {
-    where: { id: req.params.id },
-  });
-  return res.status(200).json(data);
+  try {
+    const data = await Category.update(req.body, {
+      where: { id: req.params.id },
+    });
+    return res.status(200).json(data);
+  } catch (err) {
+    return res.status(400).json(err);
+  }
 });
 
 router.delete("/:id", async (req, res) => {
